@@ -8,26 +8,55 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    name = Column(String(80), nullable=False)
+    lastname = Column(String(80), nullable=False)
+    usermame = Column(String(80), nullable=False)
+    email = Column(String(80), nullable=False)
+    password = Column(String(80), nullable=False)
+    favorito = relationship("Favorito")
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+class Character(Base):
+    __tablename__ = 'character'
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    name = Column(String(200), nullable=False)
+    status = Column(String(200), nullable=False)
+    species = Column(String(200), nullable=False)
+    gender = Column(String(200), nullable=False)
+    origin = Column(String(200), nullable=False)
+    episodio= relationship("Episode")
+    favorito = relationship("Favorito")
+    location =relationship("Location")
 
-    def to_dict(self):
-        return {}
 
-## Draw from SQLAlchemy base
+class Location(Base):
+    __tablename__ = 'location'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(200), nullable=False)
+    dimension = Column(String(200), nullable=False)
+    residents = Column(String(200), ForeignKey("character.name"))
+ 
+
+class Episode(Base):
+    __tablename__ = 'episode'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(200), nullable=False)
+    air_date = Column(String(200), nullable=False)
+    episode = Column(String(200), nullable=False)
+    character=Column(String(200),ForeignKey("character.name"))
+
+class Favorito(Base):
+    __tablename__ = 'favorito'
+    id = Column(Integer, primary_key=True)
+    personaje = Column(String(200),ForeignKey("character.name"))
+    user = Column(String(200),ForeignKey("user.name"))
+
+
+
+
+
+
+
 render_er(Base, 'diagram.png')
